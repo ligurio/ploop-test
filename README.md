@@ -8,4 +8,5 @@ main idea is to put container filesystem in a file.
 
 - setup environment with latest version of [vzkernel](https://openvz.org/Download/kernel) and [ploop](https://openvz.org/Download/ploop) utility
 - checkout the latest version of these tests
-- run tests with ``make test``
+- ``autoreconf -vi && ./configure``
+- run tests with ``make check``
