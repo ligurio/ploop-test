@@ -1,0 +1,5 @@
+#!/bin/sh
+
+~/bin_test/perf2 1
+~/bin_test/perf2 2
+~/bin_test/perf2 3

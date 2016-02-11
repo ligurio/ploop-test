@@ -1,0 +1,60 @@
+#!/bin/sh -e
+echo "---------$0---------"
+echo "---------$0---------" >/dev/ttyS0
+
+rm -f $SPACE/ploop.image
+cp $TESTFILES/ploop.imageSAV $SPACE/ploop.image
+p_on1_
+sleep 1
+partprobe /dev/ploop0
+mount -t ext4 -o balloon_ino=12 /dev/ploop0p1 /mnt_ploop
+
+echo "dd .........."
+dd if=$TESTFILES/ploop.imageSAV of=/mnt_ploop/ploop.imageSAV bs=262144 count=18560 &
+PID=$!
+sleep 1
+pb_rlc00
+wait $PID || true
+
+prepare-tfil /mnt_ploop/ploop.imageSAV $TESTFILES/ploop.imageSAV
+diff /mnt_ploop/ploop.imageSAV /tmp/tfil
+if [ "$?" != "0" ]; then
+echo "Failed"
+exit 1
+fi
+
+rm -f /mnt_ploop/ploop.imageSAV
+rm -f /mnt_ploop/tmpfil1
+
+rlc00_dd &
+PID=$!
+sleep 1
+#df /mnt_ploop
+pb_rlc00_2
+wait $PID || true
+
+ls -l /mnt_ploop/ploop.imageSAV1
+prepare-tfil /mnt_ploop/ploop.imageSAV1 $TESTFILES/ploop.imageSAV
+diff /mnt_ploop/ploop.imageSAV1 /tmp/tfil
+if [ "$?" != "0" ]; then
+echo "Failed"
+exit 1
+fi
+
+p_off
+ploop-fsck -fcr $SPACE/ploop.image
+p_on1_
+sleep 1
+partprobe /dev/ploop0
+fsck.ext4 -fn /dev/ploop0p1
+mount -t ext4 -o balloon_ino=12 /dev/ploop0p1 /mnt_ploop
+
+rlc00_check2 /mnt_ploop/ploop.imageSAV1 /tmp/tfil
+if [ "$?" != "0" ]; then
+echo "Failed"
+exit 1
+fi
+
+p_off
+exit 0
+

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+for ((i=0;i<100;i++))
+do
+	ploop mount -m /mnt_ploop/$i /space/$i/DiskDescriptor.xml
+done
+
+sleep 1
+
+for ((i=0;i<100;i++))
+do
+        ploop umount /space/$i/DiskDescriptor.xml
+done
+
+sleep 5
+sync
+echo 3 > /proc/sys/vm/drop_caches
+sleep 5
+cat /proc/meminfo > /tmp/perfleak_au_m.txt
+slabtop -s a -o |head -20 >/tmp/perfleak_au_s.txt
+
+rmmod pio_pcs; rmmod pio_nfs; rmmod pio_direct; rmmod pfmt_raw; rmmod pfmt_ploop1; rmmod pio_kaio; rmmod ploop
+
+sleep 5
+#sync
+#echo 3 > /proc/sys/vm/drop_caches
+cat /proc/meminfo > /tmp/perfleak_end_m.txt
+slabtop -s a -o |head -20 >/tmp/perfleak_end_s.txt
+

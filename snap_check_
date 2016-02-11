@@ -1,0 +1,25 @@
+#!/bin/sh -e
+
+cd $TESTFILES/snap_files
+
+diff f0bb /mnt_ploop/f0b
+diff f0bb /mnt_ploop/f0bb
+diff f0ss /mnt_ploop/f0s
+diff f0ss /mnt_ploop/f0ss
+
+diff f1bb /mnt_ploop/f1b
+diff f1bb /mnt_ploop/f1bb
+diff f1ss /mnt_ploop/f1s
+diff f1ss /mnt_ploop/f1ss
+
+diff f2bb /mnt_ploop/f2b
+diff f2bb /mnt_ploop/f2bb
+diff f2ss /mnt_ploop/f2s
+diff f2ss /mnt_ploop/f2ss
+
+diff f3bb /mnt_ploop/f3b
+diff f3bb /mnt_ploop/f3bb
+diff f3ss /mnt_ploop/f3s
+diff f3ss /mnt_ploop/f3ss
+
+exit 0

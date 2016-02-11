@@ -1,0 +1,30 @@
+#!/bin/sh -e
+echo "---------$0---------"
+echo "---------$0---------" >/dev/ttyS0
+
+p_on
+cp $TESTFILES/rlc0_files/tmpfil3 /mnt_ploop
+p_off
+
+ploop-grow -s 32g $SPACE/ploop.image
+
+p_on1_
+e2fsck -f /dev/ploop0
+mount -t ext4 /dev/ploop0 /mnt_ploop
+
+SIZ=`cat /sys/block/ploop0/size`
+if [ $SIZ != 67108864 ]; then
+echo "Incorrect bsize after ploop-grow: $SIZ"
+exit 1
+fi
+
+diff $TESTFILES/rlc0_files/tmpfil3 /mnt_ploop/tmpfil3
+resize2fs /dev/ploop0 32g
+p_off
+
+p_on1_
+e2fsck -f /dev/ploop0
+mount -t ext4 /dev/ploop0 /mnt_ploop
+diff $TESTFILES/rlc0_files/tmpfil3 /mnt_ploop/tmpfil3
+p_off
+exit 0

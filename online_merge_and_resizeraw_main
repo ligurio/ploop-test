@@ -1,0 +1,43 @@
+#!/bin/sh -e
+echo "---------$0---------"
+echo "---------$0---------" >/dev/ttyS0
+
+rm -f $SPACE/ploop-d1.image $SPACE/ploop-d2.image $SPACE/ploop-d3.image
+p_on_raw_2
+cp $TESTFILES/snap_files/f0* /mnt_ploop
+ploop snapshot -F -d /dev/ploop0 $SPACE/ploop-d1.image
+cp $TESTFILES/snap_files/f1* /mnt_ploop
+ploop snapshot -F -d /dev/ploop0 $SPACE/ploop-d2.image
+cp $TESTFILES/snap_files/f2* /mnt_ploop
+ploop snapshot -F -d /dev/ploop0 $SPACE/ploop-d3.image
+cp $TESTFILES/snap_files/f3* /mnt_ploop
+
+ploop-grow -s 2g -d /dev/ploop0
+resize2fs /dev/ploop0 2g
+
+cp $TESTFILES/snap_files/f3ss /mnt_ploop/f3s
+cp $TESTFILES/snap_files/f2ss /mnt_ploop/f2s
+cp $TESTFILES/snap_files/f1ss /mnt_ploop/f1s
+cp $TESTFILES/snap_files/f0ss /mnt_ploop/f0s
+
+cp $TESTFILES/snap_files/f3bb /mnt_ploop/f3b
+cp $TESTFILES/snap_files/f2bb /mnt_ploop/f2b
+cp $TESTFILES/snap_files/f1bb /mnt_ploop/f1b
+cp $TESTFILES/snap_files/f0bb /mnt_ploop/f0b
+ploop-merge -d /dev/ploop0 -l 0..3
+p_off_2
+
+p_on1_raw
+
+SIZ=`cat /sys/block/ploop0/size`
+if [ $SIZ != 4194304 ]; then
+echo "Incorrect bsize after ploop-grow: $SIZ"
+exit 1
+fi
+
+e2fsck -f /dev/ploop0
+mount -t ext4 /dev/ploop0 /mnt_ploop
+snap_check_
+p_off_raw
+
+exit 0

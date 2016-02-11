@@ -1,0 +1,19 @@
+#!/bin/sh
+
+rm -f /dev/mycuse
+mknod /dev/mycuse c 184 0
+~/fuse-2.9.1/example/cusexmp -M 184 -m 0 -n /dev/mycuse
+
+cat /dev/mycuse 
+echo abcde | ~/fuse-2.9.1/example/fioclient /dev/mycuse w 3
+OUT=`~/fuse-2.9.1/example/fioclient /dev/mycuse r 3`
+echo $OUT
+
+dd if=/dev/urandom of=/tmp/fu bs=123k count=1
+ls -l /tmp/fu
+cat /tmp/fu |~/fuse-2.9.1/example/fioclient /dev/mycuse w 125952
+~/fuse-2.9.1/example/fioclient /dev/mycuse r 125952 >/tmp/fu2
+diff /tmp/fu /tmp/fu2
+
+pkill lt-cusexmp
+

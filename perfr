@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo 3 > /proc/sys/vm/drop_caches
+cat /proc/meminfo > /tmp/perfr_start_1.txt
+for ((i=0;i<1000;i++))
+do
+	ploop mount /space/$i/DiskDescriptor.xml
+	ploop umount /space/$i/DiskDescriptor.xml
+done
+echo 3 > /proc/sys/vm/drop_caches
+cat /proc/meminfo > /tmp/perfr_end_1.txt

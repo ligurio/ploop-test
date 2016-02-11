@@ -1,0 +1,6 @@
+#!/bin/sh
+
+sleep 4
+echo "dd ..........2"
+dd if=$TESTFILES/ploop.imageSAV of=/mnt_ploop/ploop.imageSAV bs=262144 count=16
+dd if=$TESTFILES/ploop.imageSAV of=/mnt_ploop/ploop.imageSAV1 bs=262144 count=16560

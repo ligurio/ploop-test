@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+rm -f /fuse/tmp/fff7 /tmp/fff6
+dd if=/dev/urandom of=/tmp/fff6 bs=1M count=1
+
+dd if=/tmp/fff6 of=/fuse/tmp/fff7 bs=1M count=1 oflag=direct
+echo 3 > /proc/sys/vm/drop_caches
+diff /tmp/fff6 /fuse/tmp/fff7
+
+dd if=/dev/zero of=/fuse/tmp/f bs=1M count=1; sync; ~/bin_test/aio-verify /fuse/tmp/f
+dd if=/dev/zero of=/fuse/tmp/f bs=1M count=1; sync; ~/bin_test/aio-verify1 /fuse/tmp/f
+dd if=/dev/zero of=/fuse/tmp/f bs=1M count=1; sync; ~/bin_test/aio-verify2 /fuse/tmp/f
+dd if=/dev/zero of=/fuse/tmp/f bs=1M count=1; sync; ~/bin_test/aio-verify3 /fuse/tmp/f
+dd if=/dev/zero of=/fuse/tmp/f bs=1M count=1; sync; ~/bin_test/aio-verify4 /fuse/tmp/f
+

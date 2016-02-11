@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+cd $TESTFILES/snap_files
+
+for i in `ls`
+do
+diff $i /mnt_ploop/$i
+done
+
+exit 0

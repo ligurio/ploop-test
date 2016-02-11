@@ -1,0 +1,8 @@
+#!/bin/sh
+
+umount /mnt_ploop
+ploop umount -d /dev/ploop0
+pkill pcs_clientd
+sleep 1
+rmmod pio_pcs; rmmod pfmt_ploop1; rmmod ploop
+

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+dd if=/dev/zero of=/fuse/tmp/f bs=256k count=1 oflag=direct
+
+dd if=/dev/zero of=/fuse/tmp/f bs=256k count=1
+sync
+
+dd if=/fuse/tmp/f of=/dev/null bs=256k count=1 iflag=direct
+
+echo 3 > /proc/sys/vm/drop_caches
+dd if=/fuse/tmp/f of=/dev/null bs=256k count=1
+
+dd if=/dev/zero of=/fuse/tmp/f bs=1M count=10
+sync
+
+rm -f /fuse/tmp/f /tmp/ff /tmp/fff
+
+dd if=/dev/urandom of=/tmp/ff bs=1M count=10
+dd if=/tmp/ff of=/fuse/tmp/f bs=1M count=10 oflag=direct
+
+echo 3 > /proc/sys/vm/drop_caches
+diff /tmp/ff /fuse/tmp/f
+
+dd if=/fuse/tmp/f of=/tmp/fff bs=1M count=10 iflag=direct
+diff /tmp/f /tmp/fff

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+insmod $MODPATH/ploop.ko; insmod $MODPATH/pfmt_ploop1.ko; insmod $MODPATH/pfmt_raw.ko; insmod $MODPATH/pio_kaio.ko
+mknod /dev/ploop0 b 182 0
+ploop mount -f raw -b 512 -d /dev/ploop0 $SPACE/ploop.image $SPACE/ploop-d1.image $SPACE/ploop-d2.image $SPACE/ploop-d3.image
+

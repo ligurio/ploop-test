@@ -1,0 +1,5 @@
+#!/bin/sh
+
+ploop umount -d /dev/ploop0
+rmmod pio_kaio; rmmod pfmt_ploop1; rmmod ploop
+

@@ -1,0 +1,26 @@
+#!/bin/sh
+
+sync
+echo 3 > /proc/sys/vm/drop_caches
+cat /proc/meminfo > /tmp/perfleak_pm_m.txt
+ps alx --sort=rss > /tmp/perfleak_pm_p.txt
+
+for ((i=0;i<50;i++))
+do
+        ploop umount /space/$i/DiskDescriptor.xml
+done
+
+sleep 5
+sync
+echo 3 > /proc/sys/vm/drop_caches
+cat /proc/meminfo > /tmp/perfleak_au_m.txt
+ps alx --sort=rss > /tmp/perfleak_au_p.txt
+
+rmmod pio_pcs; rmmod pio_nfs; rmmod pio_direct; rmmod pfmt_raw; rmmod pfmt_ploop1; rmmod pio_kaio; rmmod ploop
+
+sleep 5
+sync
+echo 3 > /proc/sys/vm/drop_caches
+cat /proc/meminfo > /tmp/perfleak_end_m.txt
+ps alx --sort=rss > /tmp/perfleak_end_p.txt
+

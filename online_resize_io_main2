@@ -1,0 +1,35 @@
+#!/bin/sh -e
+echo "---------$0---------"
+echo "---------$0---------" >/dev/ttyS0
+
+_p_on
+online_resize_io_dd2 &
+PID=$!
+
+ONEGB=2097152
+S=$ONEGB
+I=0
+
+sleep 1
+while [ $I -le 40 ]; do
+  I=$(($I+1))
+  S=$(($S+$ONEGB))
+  ploop-grow -s $S -d /dev/ploop0
+done
+
+wait $PID
+
+p_off1
+#dd conv=nocreat,notrunc if=/dev/zero of=$SPACE/ploop.image bs=4 count=10 seek=60
+
+p_on1_
+
+SIZ=`cat /sys/block/ploop0/size`
+if [ $SIZ != $S ]; then
+echo "Incorrect bsize after ploop-grow: $SIZ"
+exit 1
+fi
+
+online_resize_io_check
+
+p_off1

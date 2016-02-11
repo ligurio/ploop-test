@@ -1,0 +1,43 @@
+#!/bin/sh -e
+echo "---------$0---------"
+echo "---------$0---------" >/dev/ttyS0
+
+p_on_bs512
+
+write_test
+sleep 30
+
+rm -f $SPACE/ploop1.image
+ploop-copy -s /dev/ploop0 -d $SPACE/ploop1.image -F /root/bin_test/write_kill
+
+p_off1
+
+ls -l $SPACE/ploop.image $SPACE/ploop1.image
+cp $SPACE/ploop1.image $SPACE/ploop2.image
+diff $SPACE/ploop.image $SPACE/ploop1.image
+if [ "$?" != "0" ]; then
+echo "Failed"
+exit 1
+fi
+
+p_on1_
+mount -t ext4 /dev/ploop0 /mnt_ploop
+rm -f /tmp/fil1 /tmp/fil2
+cp /mnt_ploop/fil /tmp/fil1
+p_off
+
+rm -f /sapce/ploop.image
+mv $SPACE/ploop2.image $SPACE/ploop.image
+p_on1_
+mount -t ext4 /dev/ploop0 /mnt_ploop
+cp /mnt_ploop/fil /tmp/fil2
+p_off
+
+diff /tmp/fil1 /tmp/fil2
+if [ "$?" != "0" ]; then
+echo "Failed"
+exit 1
+fi
+
+rm -f /tmp/fil1 /tmp/fil2 $SPACE/ploop1.image
+exit 0

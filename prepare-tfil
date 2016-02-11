@@ -1,0 +1,9 @@
+#!/bin/sh
+
+NEW_F=$1
+OLD_F=$2
+
+SIZ_B=`ls -ogn $NEW_F |cut -d ' ' -f 3`
+SIZ_P=$(($SIZ_B/4096))
+
+dd if=$OLD_F of=/tmp/tfil bs=4096 count=$SIZ_P

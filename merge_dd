@@ -1,0 +1,4 @@
+#!/bin/sh
+
+dd if=$TESTFILES/ploop.imageSAV of=/mnt_ploop/fil bs=4096 count=499802
+exit 0

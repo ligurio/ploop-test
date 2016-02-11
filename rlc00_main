@@ -1,0 +1,45 @@
+#!/bin/sh -e
+echo "---------$0---------"
+echo "---------$0---------" >/dev/ttyS0
+
+export PATH=$PATH:../../../ploop-tools
+
+rm -f $SPACE/ploop.image
+cp $TESTFILES/ploop.imageSAV $SPACE/ploop.image
+p_on1_
+sleep 2
+partprobe /dev/ploop0
+echo "partprobe done"
+mount -t ext4 -o balloon_ino=12 /dev/ploop0p1 /mnt_ploop
+
+echo "dd .........."
+dd if=$TESTFILES/ploop.imageSAV of=/mnt_ploop/ploop.imageSAV bs=262144 count=18560 &
+PID=$!
+sleep 1
+pb_rlc00
+wait $PID || true
+
+prepare-tfil /mnt_ploop/ploop.imageSAV $TESTFILES/ploop.imageSAV
+diff /mnt_ploop/ploop.imageSAV /tmp/tfil
+if [ "$?" != "0" ]; then
+echo "Failed"
+exit 1
+fi
+
+p_off
+ploop-fsck -fcr $SPACE/ploop.image
+p_on1_
+sleep 1
+partprobe /dev/ploop0
+fsck.ext4 -fn /dev/ploop0p1
+mount -t ext4 -o balloon_ino=12 /dev/ploop0p1 /mnt_ploop
+
+rlc00_check /mnt_ploop/ploop.imageSAV /tmp/tfil
+if [ "$?" != "0" ]; then
+echo "Failed"
+exit 1
+fi
+
+p_off
+exit 0
+

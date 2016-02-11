@@ -1,0 +1,11 @@
+#!/bin/sh
+
+rm -rf /space/D* /space/p* /space/r*
+insmod $MODPATH/ploop.ko; insmod $MODPATH/pfmt_ploop1.ko; insmod $MODPATH/pio_kaio.ko
+ploop init -s 5g -f ploop1 $SPACE/ploop.image
+mknod /dev/ploop0 b 182 0
+ploop mount -f ploop1 -d /dev/ploop0 $SPACE/ploop.image
+ploop-grow -s 300G -d /dev/ploop0
+p_off1
+ploop-fsck -fr /space/ploop.image
+

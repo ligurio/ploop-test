@@ -1,0 +1,59 @@
+#!/bin/sh -e
+echo "---------$0---------"
+echo "---------$0---------" >/dev/ttyS0
+
+rm -f $SPACE/ploop-d1.image $SPACE/ploop-d2.image $SPACE/ploop-d3.image
+p_on_gpt
+
+write_test
+sleep 10
+
+ls -l /mnt_ploop/fil
+ploop snapshot -F -d /dev/ploop0 $SPACE/ploop-d1.image
+sleep 10; ls -l /mnt_ploop/fil
+ploop snapshot -F -d /dev/ploop0 $SPACE/ploop-d2.image
+sleep 10; ls -l /mnt_ploop/fil
+ploop snapshot -F -d /dev/ploop0 $SPACE/ploop-d3.image
+cp $TESTFILES/rlc0_files/tmpfil1 /mnt_ploop
+sleep 10; ls -l /mnt_ploop/fil
+
+write_kill
+p_off1
+
+p_on1_d123
+parted /dev/ploop0 print >/dev/null
+sleep 1
+e2fsck -f /dev/ploop0p1
+mount -t ext4 -o balloon_ino=12 /dev/ploop0p1 /mnt_ploop
+
+prepare-tfil /mnt_ploop/fil $TESTFILES/ploop.imageSAV
+diff /mnt_ploop/fil /tmp/tfil
+if [ "$?" != "0" ]; then
+echo "Failed"
+exit 1
+fi
+
+rm -f /mnt_ploop/tmpfil1
+df
+p_off
+
+p_on1_d123
+parted /dev/ploop0 print >/dev/null
+sleep 1
+mount -t ext4 -o balloon_ino=12 /dev/ploop0p1 /mnt_ploop
+ploop-balloon change -s 1641662 -d /dev/ploop0 -m /mnt_ploop
+p_off
+
+p_on1_d123
+parted /dev/ploop0 print >/dev/null
+sleep 1
+mount -t ext4 -o balloon_ino=12 /dev/ploop0p1 /mnt_ploop
+prepare-tfil /mnt_ploop/fil $TESTFILES/ploop.imageSAV
+diff /mnt_ploop/fil /tmp/tfil
+if [ "$?" != "0" ]; then
+echo "Failed2"
+exit 1
+fi
+p_off
+
+exit 0

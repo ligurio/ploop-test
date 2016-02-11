@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+online_merge_and_resize_main6_
+online_merge_and_resize_big_main6_
+online_merge_and_resize_main7
+online_merge_and_resize_big_main7
+online_merge_and_resize_main7_
+online_merge_and_resize_big_main7_
+online_merge_io_main
+

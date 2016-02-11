@@ -1,0 +1,10 @@
+#!/bin/sh
+
+rm -f $SPACE/ploop.image
+insmod $MODPATH/ploop.ko; insmod $MODPATH/pfmt_ploop1.ko; insmod $MODPATH/pio_kaio.ko
+ploop init -s 1g -f ploop1 -t ext4 $SPACE/ploop.image
+ploop mount -f ploop1 -d /dev/ploop0 $SPACE/ploop.image
+parted /dev/ploop0 print >/dev/null
+sleep 1
+mount -t ext4 -o balloon_ino=12 /dev/ploop0p1 /mnt_ploop
+

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+rm -rf /pcs/q
+mkdir /pcs/q
+ploop init -s 100m -t ext4 /pcs/q/root.hdd
+
+ploop mount -m /mnt_ploop /pcs/q/DiskDescriptor.xml
+for i in `seq 1 1000`; do date >/mnt_ploop/f$i; done
+
+ploop snapshot /pcs/q/DiskDescriptor.xml
+for i in `seq 1 1000`; do date >/mnt_ploop/f$i; done
+rm -f /mnt_ploop/*
+for i in `seq 1 1000`; do date >/mnt_ploop/f$i; done
+
+ploop umount /pcs/q/DiskDescriptor.xml
+
