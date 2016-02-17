@@ -1,0 +1,10 @@
+SPACE=/vz/ploop
+[ ! -e $SPACE ] && mkdir -p $SPACE
+
+PLOOP_DEV=/dev/ploop0
+[ ! -e $PLOOP_DEV ] && mknod $PLOOP_DEV b 182 0
+
+PLOOP_MNT=$SPACE/ploop-mnt.$$
+[ ! -e $PLOOP_MNT ] && mkdir -p $PLOOP_MNT
+
+PLOOP_IMG=$SPACE/ploop-img.$$
