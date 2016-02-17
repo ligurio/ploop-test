@@ -1,4 +1,4 @@
-AC_INIT([ploop tests], m4_esyscmd_s([git rev-parse HEAD]), [devel@openvz.org])
+AC_INIT([ploop tests], [0.1], [devel@openvz.org], [ploop-tests], [https://www.openvz.org/])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
