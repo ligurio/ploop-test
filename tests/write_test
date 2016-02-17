@@ -1,5 +1,0 @@
-#!/bin/sh
-
-dd oflag=direct if=$TESTFILES/ploop.imageSAV of=/mnt_ploop/fil bs=4096 &
-echo $! >/tmp/write_test.pid
-

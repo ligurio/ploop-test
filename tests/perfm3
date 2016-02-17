@@ -1,5 +1,0 @@
-#!/bin/sh
-
-~/bin_test/perf3 1
-~/bin_test/perf3 2
-~/bin_test/perf3 3

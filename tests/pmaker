@@ -1,8 +1,0 @@
-#!/bin/sh
-
-rm -rf /space2/x
-mkdir /space2/x
-
-ploop init -s $1m -t ext4 /space2/x/root.hdd
-ploop mount -m /mnt_ploop/0 /space2/x/DiskDescriptor.xml
-ploop umount /space2/x/DiskDescriptor.xml

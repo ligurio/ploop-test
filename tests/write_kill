@@ -1,6 +1,0 @@
-#!/bin/sh
-
-kill -9 `cat /tmp/write_test.pid`
-sleep 1
-umount /mnt_ploop
-

@@ -1,9 +1,0 @@
-#!/bin/sh -e
-
-I=0
-while [ $I -le 1010 ]; do
-  dd iflag=direct if=/dev/ploop0 of=/tmp/t bs=262144 count=1 skip=$I 2>/dev/null
-  diff /tmp/t /tmp/t_ref
-  I=$(($I+1))
-done
-rm -f /tmp/t /tmp/t_ref

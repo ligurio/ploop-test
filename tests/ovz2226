@@ -1,9 +1,0 @@
-#!/bin/sh
-
-rm -rf /space/D* /space/p* /space/r*
-p_on_gpt_5GB
-p_off
-insmod $MODPATH/ploop.ko; insmod $MODPATH/pfmt_ploop1.ko; insmod $MODPATH/pio_kaio.ko
-ploop mount -m /mnt_ploop /space/DiskDescriptor.xml
-ploop resize -s 300G /space/DiskDescriptor.xml
-

@@ -1,5 +1,0 @@
-#!/bin/sh
-#ploop-balloon2 -s 24773120 -d /dev/ploop0 -m /mnt_ploop
-#ploop-balloon change -s 5773120 -d /dev/ploop0 -m /mnt_ploop
-df /mnt_ploop
-ploop-balloon change -s 13773120 -d /dev/ploop0 -m /mnt_ploop
