@@ -1,0 +1,19 @@
+#!/bin/sh
+
+. tests/tap-functions
+. tests/env
+
+plan_tests 4
+
+ploop init -s 1g -f raw $PLOOP_IMG
+ok $? "create raw ploop image"
+
+ploop mount -f raw -d $PLOOP_DEV -b 2048 $PLOOP_IMG
+ok $? "mount raw ploop"
+
+mkfs.ext4 -j -b 4096 $PLOOP_DEV
+ok $? "create fs on raw ploop"
+
+ploop umount -d $PLOOP_DEV
+ok $? "umount raw ploop"
+rm -rf $SPACE/*
