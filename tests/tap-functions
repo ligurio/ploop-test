@@ -1,6 +1,5 @@
 #!/bin/bash 
 
-
 _version='1.02'
 	
 _plan_set=0
